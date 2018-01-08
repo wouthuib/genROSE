@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="default" />
+	<File name="..\Char Server\charpackets.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="11981" topLine="302" />
+	</File>
+	<File name="..\Char Server\charserver.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="3960" topLine="308" />
+	</File>
+	<File name="..\Char Server\charserver.h" open="0" top="0" tabpos="2">
+		<Cursor position="182" topLine="15" />
+	</File>
+	<File name="..\Char Server\clan.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="47994" topLine="1199" />
+	</File>
+	<File name="..\Char Server\datatypes.h" open="0" top="0" tabpos="0">
+		<Cursor position="944" topLine="22" />
+	</File>
+	<File name="..\Char Server\extrafunctions.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1357" topLine="13" />
+	</File>
+	<File name="..\Common\sockets.h" open="0" top="0" tabpos="0">
+		<Cursor position="1643" topLine="36" />
+	</File>
+</CodeBlocks_layout_file>

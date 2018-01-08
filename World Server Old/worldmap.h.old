@@ -1,0 +1,118 @@
+/*
+    Rose Online Server Emulator
+    Copyright (C) 2006,2007 OSRose Team http://www.dev-osrose.com
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    depeloped with Main erose/hrose source server + some change from the original eich source
+*/
+#ifndef __ROSE_MAP__
+#define __ROSE_MAP__
+#include "worldserver.h"
+#include "player.h"
+#include "character.h"
+#include "worldmonster.h"
+#include "datatypes.h"
+
+//LMATEST
+class CMonster;
+
+class CMap
+{
+    public:
+        CMap( );
+        ~CMap( );
+
+        bool AddPlayer( CPlayer* player );
+        bool RemovePlayer( CPlayer* player, bool clearobject=true );
+
+    //CMonster* AddMonster( unsigned int montype, fPoint position,  unsigned int owner=0, CMDrops* MonsterDrop=NULL, CMDrops* MapDrop=NULL, unsigned int spawnid=0, bool GetDropData=false );
+    CMonster* AddMonster( unsigned int montype, fPoint position,  unsigned int owner=0, CMDrops* MonsterDrop=NULL, CMDrops* MapDrop=NULL, unsigned int spawnid=0, bool GetDropData=false, bool is_tactic=false);    //LMA: adding tactic.
+    bool DeleteMonster( CMonster*, bool clearobject=false, unsigned int i=0 );
+    bool AddDrop( CDrop* drop );
+    bool DeleteDrop( CDrop* drop );
+    bool AddNPC( CNPC* npc );
+    bool DeleteNPC( CNPC* npc );
+
+    CMonster* ConverToMonster( CMonster* monster, unsigned int newmonttype, bool heal=true );
+    CMonster* ConverToMonster( CNPC* npc, unsigned int newmonttype );
+
+    bool TeleportPlayer( CPlayer* player, fPoint coordold, bool TelePassenger=true );
+
+    CRespawnPoint* GetNearRespawn( CPlayer* player );
+    CRespawnPoint* GetFirstRespawn( );
+
+    CCharacter* GetCharInMap( unsigned int id );
+    CPlayer* GetPlayerInMap( unsigned int id );
+    CMonster* GetMonsterInMap( unsigned int id );
+    CPlayer* GetCharIDInMap( DWORD id );
+    CDrop* GetDropInMap( unsigned int id );
+    CNPC* GetNPCInMap( unsigned int id );
+    CNPC* GetNPCInMapQSD( unsigned int id );
+    void UpdateTime( );
+    void CleanDrops( );
+    void RespawnMonster( );
+    bool IsNight( );
+
+    //LMA: nb_summons
+    unsigned int nb_summons;
+
+    unsigned int id;           // id from map
+    unsigned int dayperiod;    // duration of 1 day
+    unsigned int morningtime;  // morning start time
+    unsigned int daytime;      // day start time
+    unsigned int eveningtime;  // evening start time
+    unsigned int nighttime;    // nighttime start time
+    unsigned int ZoneTime;     // how many 6 minute segments since start of the day
+    //unsigned int ghost;        // ghosttime?
+    BYTE allowpvp;     // pvp allowed?
+    bool allowpat;     // pat allowed?
+    unsigned int STLID;         //LMA: Stl ID.
+    unsigned long QSDzone;      //LMA: Zone transfer trigger
+    unsigned long QSDkilling;   //LMA: Killing trigger
+    unsigned long QSDDeath;        //LMA: Death trigger
+
+    //LMA BEGIN
+    //20070621-211100
+    //For CF Mode 1
+    unsigned int is_cf;        //is this a cf map (for jelly beans)...
+    unsigned int id_temp_mon;        //id of the temporary monster (before the jelly bean or another one)
+    unsigned int id_def_mon;        //id of the mon with great Xp
+    unsigned int min_lvl;        //minimum lvl for cf
+    unsigned int mon_lvl;        //lvl of the mob (used for exp calculation according to player's level)
+    unsigned int mon_exp;        //exp of the mob
+    unsigned int percent;        //% of luck summoning a monster
+    //LMA END
+
+    // Time values
+    unsigned int MapTime;      // Past time in this map
+    clock_t LastUpdate;// Last time update in the map
+    unsigned int CurrentTime;  // 0 = morning | 1 = day  | 2 = evening | 3 = night | 4+ = invalid
+
+    vector<CRespawnPoint*>	    RespawnList;	  // RespawnZones List
+    vector<CSpawnArea*>	        MonsterSpawnList; // Monster spawn in this map
+    vector<CMobGroup*>          MobGroupList; // Spawn "Zones"
+    vector<CMonster*>           MonsterList;      // Monster List in this map
+  	vector<CDrop*>			    DropsList;				// Droped Items
+    vector<CPlayer*>            PlayerList;       // Client list in this map;
+    vector<CNPC*>               NPCList;          // NPC in this map
+    vector<CTeleGate*>		    TeleGateList;	  // Telegates from this map
+    vector<CCustomGate*>        CustomGateList;   //Custom telegate list
+    vector<CCustomEvent*>       CustomEventList;  //Custom events list
+
+    pthread_mutex_t MonsterMutex, DropMutex;
+};
+
+#endif

@@ -1,0 +1,207 @@
+# depslib dependency file v1.0
+1305289215 source:d:\genetic server files\char server\charclient.cpp
+	"charserver.h"
+
+1305289215 d:\genetic server files\char server\charserver.h
+	<time.h>
+	"../common/sockets.h"
+	"datatypes.h"
+
+1305289360 d:\genetic server files\common\sockets.h
+	<windows.h>
+	<winsock2.h>
+	<unistd.h>
+	<netinet/in.h>
+	<sys/socket.h>
+	<sys/types.h>
+	<arpa/inet.h>
+	<sys/ioctl.h>
+	<cstdarg>
+	<errno.h>
+	<mysql/mysql.h>
+	<cstdio>
+	<cstdlib>
+	<iostream>
+	<vector>
+	<string>
+	<cstdio>
+	<exception>
+	<time.h>
+	<assert.h>
+	<math.h>
+	<pthread.h>
+	<map>
+	<csignal>
+	"log.h"
+	"rosecrypt.hpp"
+	"config.h"
+	"database/database.h"
+
+1305289360 d:\genetic server files\common\log.h
+
+1305289360 d:\genetic server files\common\rosecrypt.hpp
+	<windows.h>
+
+1305289360 d:\genetic server files\common\config.h
+
+1305289358 d:\genetic server files\common\database\database.h
+	"../sockets.h"
+
+1305289215 d:\genetic server files\char server\datatypes.h
+	"../common/sockets.h"
+
+1305467316 source:d:\genetic server files\char server\charpackets.cpp
+	"charserver.h"
+
+1305289215 source:d:\genetic server files\char server\charserver.cpp
+	"charserver.h"
+
+1305289215 source:d:\genetic server files\char server\clan.cpp
+	"CharServer.h"
+
+1305289215 source:d:\genetic server files\char server\community.cpp
+	"charserver.h"
+
+1305289215 source:d:\genetic server files\char server\extrafunctions.cpp
+	"charserver.h"
+
+1305289215 source:d:\genetic server files\char server\main.cpp
+	"charserver.h"
+
+1305289215 source:d:\genetic server files\char server\signal.cpp
+	"charserver.h"
+
+1305289360 source:d:\genetic server files\common\socketbase.cpp
+	"sockets.h"
+
+1305289360 source:d:\genetic server files\common\socketclient.cpp
+	"sockets.h"
+
+1305289360 source:d:\genetic server files\common\socketserver.cpp
+	"sockets.h"
+
+1305289360 source:d:\genetic server files\common\config.cpp
+	<cstdio>
+	<cstring>
+	<cstdlib>
+	<ctype.h>
+
+1305289358 source:d:\genetic server files\common\database\database.cpp
+	"database.h"
+	"../log.h"
+
+1305289360 source:d:\genetic server files\common\log.cpp
+	<conio.h>
+	<windows.h>
+	<cstdio>
+	<cstdio>
+	<string>
+	<time.h>
+	"log.h"
+
+1305289360 source:d:\genetic server files\common\rosecrypt.cpp
+	"rosecrypt.hpp"
+
+1305289215 source:c:\documents and settings\administrator\desktop\genetic server files\char server\charclient.cpp
+	"charserver.h"
+
+1305289215 c:\documents and settings\administrator\desktop\genetic server files\char server\charserver.h
+	<time.h>
+	"../common/sockets.h"
+	"datatypes.h"
+
+1305289360 c:\documents and settings\administrator\desktop\genetic server files\common\sockets.h
+	<windows.h>
+	<winsock2.h>
+	<unistd.h>
+	<netinet/in.h>
+	<sys/socket.h>
+	<sys/types.h>
+	<arpa/inet.h>
+	<sys/ioctl.h>
+	<cstdarg>
+	<errno.h>
+	<mysql/mysql.h>
+	<cstdio>
+	<cstdlib>
+	<iostream>
+	<vector>
+	<string>
+	<cstdio>
+	<exception>
+	<time.h>
+	<assert.h>
+	<math.h>
+	<pthread.h>
+	<map>
+	<csignal>
+	"log.h"
+	"rosecrypt.hpp"
+	"config.h"
+	"database/database.h"
+
+1305289360 c:\documents and settings\administrator\desktop\genetic server files\common\log.h
+
+1305289360 c:\documents and settings\administrator\desktop\genetic server files\common\rosecrypt.hpp
+	<windows.h>
+
+1305289360 c:\documents and settings\administrator\desktop\genetic server files\common\config.h
+
+1305289358 c:\documents and settings\administrator\desktop\genetic server files\common\database\database.h
+	"../sockets.h"
+
+1305289215 c:\documents and settings\administrator\desktop\genetic server files\char server\datatypes.h
+	"../common/sockets.h"
+
+1306668788 source:c:\documents and settings\administrator\desktop\genetic server files\char server\charpackets.cpp
+	"charserver.h"
+
+1305289215 source:c:\documents and settings\administrator\desktop\genetic server files\char server\charserver.cpp
+	"charserver.h"
+
+1305289215 source:c:\documents and settings\administrator\desktop\genetic server files\char server\clan.cpp
+	"CharServer.h"
+
+1305820198 source:c:\documents and settings\administrator\desktop\genetic server files\char server\community.cpp
+	"charserver.h"
+
+1305289215 source:c:\documents and settings\administrator\desktop\genetic server files\char server\extrafunctions.cpp
+	"charserver.h"
+
+1305289215 source:c:\documents and settings\administrator\desktop\genetic server files\char server\main.cpp
+	"charserver.h"
+
+1305289215 source:c:\documents and settings\administrator\desktop\genetic server files\char server\signal.cpp
+	"charserver.h"
+
+1305289360 source:c:\documents and settings\administrator\desktop\genetic server files\common\socketbase.cpp
+	"sockets.h"
+
+1305289360 source:c:\documents and settings\administrator\desktop\genetic server files\common\socketclient.cpp
+	"sockets.h"
+
+1305289360 source:c:\documents and settings\administrator\desktop\genetic server files\common\socketserver.cpp
+	"sockets.h"
+
+1305289360 source:c:\documents and settings\administrator\desktop\genetic server files\common\config.cpp
+	<cstdio>
+	<cstring>
+	<cstdlib>
+	<ctype.h>
+
+1305289358 source:c:\documents and settings\administrator\desktop\genetic server files\common\database\database.cpp
+	"database.h"
+	"../log.h"
+
+1305289360 source:c:\documents and settings\administrator\desktop\genetic server files\common\log.cpp
+	<conio.h>
+	<windows.h>
+	<cstdio>
+	<cstdio>
+	<string>
+	<time.h>
+	"log.h"
+
+1305289360 source:c:\documents and settings\administrator\desktop\genetic server files\common\rosecrypt.cpp
+	"rosecrypt.hpp"
+

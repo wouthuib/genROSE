@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="default" />
+	<File name="..\Common\SocketBase.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="38" />
+	</File>
+	<File name="..\Common\SocketClient.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="4456" topLine="191" />
+	</File>
+	<File name="..\Common\database\database.h" open="0" top="0" tabpos="2">
+		<Cursor position="1574" topLine="26" />
+	</File>
+	<File name="..\Common\sockets.h" open="0" top="0" tabpos="1">
+		<Cursor position="9964" topLine="290" />
+	</File>
+	<File name="..\Login Server\ExtraFunction.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="..\Login Server\LoginPackets.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="15310" topLine="417" />
+	</File>
+	<File name="..\Login Server\Signal.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="93" />
+	</File>
+	<File name="..\Login Server\loginclient.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="14" />
+	</File>
+	<File name="..\Login Server\loginserver.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="5019" topLine="167" />
+	</File>
+	<File name="..\Login Server\main.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="1527" topLine="30" />
+	</File>
+</CodeBlocks_layout_file>
