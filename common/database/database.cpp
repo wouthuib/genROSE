@@ -25,10 +25,20 @@
 // constructor
 CDatabase::CDatabase( char* server , char* username, char* password, char* database, unsigned int port , MYSQL* mysql)
 {
+    int i = strlen(server);
+    server[i - 1] = '\0'; // removes quote at the end and inserts termination char
+    i = strlen(username);
+    username[i - 1] = '\0';
+    i = strlen(password);
+    password[i - 1] = '\0';
+    i = strlen(database);
+    database[i - 1] = '\0';
+
     Server = server;
     Username = username;
     Password = password;
     Database = database;
+
     Port = port;
     Mysql = mysql;
     SQLMutex = PTHREAD_MUTEX_INITIALIZER;

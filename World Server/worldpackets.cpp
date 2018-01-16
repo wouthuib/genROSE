@@ -3773,6 +3773,7 @@ bool CWorldServer::pakGiveQuest( CPlayer* thisclient, CPacket* P )
   byte slot = GETBYTE((*P),1);
   dword hash = GETDWORD((*P),2);
 
+  //printf("%s::%i - action = %i, slot = %i, hash = %i\n",__FILE__,__LINE__,action, slot, hash);
 
   if( thisclient->questdebug )
   {

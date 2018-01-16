@@ -62,6 +62,7 @@
 #include <math.h>
 #include <pthread.h>
 #include <string.h>
+#include <algorithm>
 //#include <vector>
 #include <map>  //LMA: special for Drakia ^_^ (testing)
 #include <csignal>

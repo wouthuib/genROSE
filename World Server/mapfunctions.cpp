@@ -308,10 +308,11 @@ void CMap::UpdateTime( )
 void CMap::CleanDrops( )
 {
     long int time = static_cast<long int>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count());
+
     for(UINT j=0;j<DropsList.size();j++)
     {
         CDrop* thisdrop = DropsList.at(j);
-        if( time - thisdrop->droptime >= 50 )
+        if( time - thisdrop->droptime >= 50 * 1000) // 50 seconds
             DeleteDrop( thisdrop );
     }
 }

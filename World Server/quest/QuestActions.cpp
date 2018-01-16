@@ -22,6 +22,8 @@
 // Props to ExJam for this code :D Ported to OSpRose by Drakia
 #include "../worldserver.h"
 DWORD GetRewardValue(DWORD function, DWORD amount, CPlayer* client, word nDupCNT){
+
+	long int time = static_cast<long int>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count());
 	switch(function){
 		case 0:
 		{
@@ -80,6 +82,7 @@ DWORD GetRewardValue(DWORD function, DWORD amount, CPlayer* client, word nDupCNT
 //Update Quest
 QUESTREWD(000)
 {
+	long int time = static_cast<long int>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count());
 	GETREWDDATA(000);
 
 	switch(data->btOp){//0 remove, 1 start, 2 replace quest keep items, 3 replace quest delete items, 4 select
@@ -130,7 +133,7 @@ QUESTREWD(000)
 				if(client->quest.quests[i].QuestID != 0) continue;
 				memset(&client->quest.quests[i], 0, sizeof(SQuest));
 				client->quest.quests[i].QuestID = data->iQuestSN;
-				client->quest.quests[i].StartTime = time(NULL);
+				client->quest.quests[i].StartTime = time;
 				LogDebug("We tried to start quest %i",data->iQuestSN);
 				break;
 			}
@@ -144,7 +147,7 @@ QUESTREWD(000)
 			for(DWORD i = 0; i < 10; i++){
 				if(client->quest.quests[i].QuestID != client->ActiveQuest) continue;
 				client->quest.quests[i].QuestID = data->iQuestSN;
-				client->quest.quests[i].StartTime = time(NULL);
+				client->quest.quests[i].StartTime = time;
 				LogDebug("We tried to replace quest %i with items",data->iQuestSN);
 				break;
             }
@@ -159,7 +162,7 @@ QUESTREWD(000)
 				if(client->quest.quests[i].QuestID != client->ActiveQuest) continue;
 				memset(&client->quest.quests[i], 0, sizeof(SQuest));
 				client->quest.quests[i].QuestID = data->iQuestSN;
-				client->quest.quests[i].StartTime = time(NULL);
+				client->quest.quests[i].StartTime = time;
 				LogDebug("We tried to replace quest %i without items",data->iQuestSN);
 				break;
             }

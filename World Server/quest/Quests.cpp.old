@@ -22,47 +22,48 @@
 // Props to ExJam for this code :D
 #include "../worldserver.h"
 
-void CWorldServer::ReadQSD(strings path, dword index)
+void CWorldServer::ReadQSD(char* path, dword index)
 {
-    Log( MSG_WARNING, "QSD File: '%s', Mass exporter = %s", path, Config.massexport ? "true" : "false" );
 
-    //LMA: mass exporter.
-    bool lma_export=false;
-    if(Config.massexport)
-        lma_export=true;
+	//LMA: mass exporter.
+	bool lma_export=false;
+	if(Config.massexport)
+            lma_export=true;
 
 	CRoseFile* fh = new CRoseFile(path, FM_READ | FM_BINARY);
 	if(fh->IsOpen())
 	{ // goto done;
 
-        Log(MSG_INFO, "Loading %s", path);
+        Log(MSG_LOAD, "Loading %s", path);
 
         fh->Seek(4, SEEK_CUR);
         dword BlockCount = fh->Get<dword>();
 
         if(lma_export)
         {
-            Log(MSG_INFO, " ");
-            Log(MSG_INFO, " ");
+            LogSp(MSG_INFO, " ");
+            LogSp(MSG_INFO, " ");
 
             if(BlockCount==0)
             {
-                Log(MSG_INFO, "Exporting %s :: 0 block", path);
+                LogSp(MSG_INFO, "Exporting %s :: 0 block", path);
             }
             else if (BlockCount==1)
             {
-                Log(MSG_INFO, "Exporting %s :: 1 block", path);
+                LogSp(MSG_INFO, "Exporting %s :: 1 block", path);
             }
             else
             {
-                Log(MSG_INFO, "Exporting %s :: %i blocks", path,BlockCount);
+                LogSp(MSG_INFO, "Exporting %s :: %i blocks", path,BlockCount);
             }
 
-            Log(MSG_INFO, "{");
+            LogSp(MSG_INFO, "{");
 
         }
 
         fh->Seek(fh->Get<word>(), SEEK_CUR);
+	dword RecordCount = fh->Get<dword>();
+
         for(dword i = 0; i < BlockCount; i++)
         {
             dword RecordCount = fh->Get<dword>();
@@ -70,19 +71,19 @@ void CWorldServer::ReadQSD(strings path, dword index)
             if(lma_export)
             {
                 if(i>0)
-                    Log(MSG_INFO, "\t ");
+                    LogSp(MSG_INFO, "\t ");
 
                 if(RecordCount==0)
                 {
-                    Log(MSG_INFO, "\t Block %i / %i :: 0 Function",i+1,BlockCount);
+                    LogSp(MSG_INFO, "\t Block %i / %i :: 0 Function",i+1,BlockCount);
                 }
                 else if (RecordCount==1)
                 {
-                    Log(MSG_INFO, "\t Block %i / %i :: 1 Function",i+1,BlockCount);
+                    LogSp(MSG_INFO, "\t Block %i / %i :: 1 Function",i+1,BlockCount);
                 }
                 else
                 {
-                    Log(MSG_INFO, "\t Block %i / %i :: %i Functions",i+1,BlockCount,RecordCount);
+                    LogSp(MSG_INFO, "\t Block %i / %i :: %i Functions",i+1,BlockCount,RecordCount);
                 }
 
                 LogSp(MSG_INFO, "\t {");
@@ -90,9 +91,10 @@ void CWorldServer::ReadQSD(strings path, dword index)
             }
 
             fh->Seek(fh->Get<word>(), SEEK_CUR);
+
             for(dword j = 0; j < RecordCount; j++)
             {
-                CQuestTrigger* trigger = new CQuestTrigger();
+		CQuestTrigger* trigger = new CQuestTrigger();
                 trigger->id=((index*0x10000)+(i*0x100)+j);
                 trigger->CheckNext = fh->Get<byte>();
                 trigger->ConditionCount = fh->Get<dword>();
@@ -100,8 +102,18 @@ void CWorldServer::ReadQSD(strings path, dword index)
 
                 dword len = fh->Get<word>();
                 trigger->TriggerName = new char[len+1];
-                fh->Read(trigger->TriggerName, len, 1);
+		fh->Read(trigger->TriggerName, len, 1);
                 trigger->TriggerName[len] = 0;
+
+		//printf("%s::%i - File = %s, file length = %u, loopnr = %u, loopmax =%u\n",__FILE__,__LINE__, path, len, j, RecordCount);
+
+		if(len == 0)
+                {
+                    //std::cin.get();
+                    break;
+                }
+		else
+		    printf("%s::%i - File = %s, file length = %u, loopnr = %u, loopmax =%u\n",__FILE__,__LINE__, path, len, j, RecordCount);
 
                 if(lma_export)
                 {
@@ -135,20 +147,21 @@ void CWorldServer::ReadQSD(strings path, dword index)
                     }
 
                     if(j>0)
-                        Log(MSG_INFO, "\t\t ");
+                        LogSp(MSG_INFO, "\t\t ");
 
-                    LogSp(MSG_INFO, "\t\t Function %i / %i (%s / %u) :: %s, %s",j+1,RecordCount,trigger->TriggerName,MakeStrHash(trigger->TriggerName),bconditions,bactions);
+		    LogSp(MSG_INFO, "\t\t Function %i / %i (%s / %u) :: %s, %s",j+1,RecordCount,trigger->TriggerName,MakeStrHash(trigger->TriggerName),bconditions,bactions);
                     if(trigger->CheckNext)
-                        Log(MSG_INFO, "\t\t\t <If Function %s returns False, we'll check the next Function (check_next activated)>",trigger->TriggerName);
+                        LogSp(MSG_INFO, "\t\t\t <If Function %s returns False, we'll check the next Function (check_next activated)>",trigger->TriggerName);
                     LogSp(MSG_INFO, "\t\t {");
                 }
 
-                if(trigger->ConditionCount > 0)
+		//printf("Quests.cpp::150 \t\t Function %i / %i (%s / %lu)\n", j+1,RecordCount,trigger->TriggerName,MakeStrHash(trigger->TriggerName));
+                if(trigger->ConditionCount > 0 && len > 0) // update to avoid long loops
                 {
                     if(lma_export)
                     {
-                        Log(MSG_INFO, "\t\t\t Conditions (%i)",trigger->ConditionCount);
-                        Log(MSG_INFO, "\t\t\t {");
+                        LogSp(MSG_INFO, "\t\t\t Conditions (%i)",trigger->ConditionCount);
+                        LogSp(MSG_INFO, "\t\t\t {");
                     }
 
                     trigger->Conditions = new CQuestTrigger::SQuestDatum*[trigger->ConditionCount];
@@ -172,7 +185,7 @@ void CWorldServer::ReadQSD(strings path, dword index)
 
                     if(lma_export)
                     {
-                        Log(MSG_INFO, "\t\t\t }");
+                        LogSp(MSG_INFO, "\t\t\t }");
                     }
 
                 }
@@ -180,7 +193,7 @@ void CWorldServer::ReadQSD(strings path, dword index)
                 {
                     if(lma_export)
                     {
-                        Log(MSG_INFO, "\t\t\t 0 Condition");
+                        LogSp(MSG_INFO, "\t\t\t 0 Condition");
                     }
 
                     trigger->Conditions = NULL;
@@ -191,8 +204,8 @@ void CWorldServer::ReadQSD(strings path, dword index)
                     trigger->Actions = new CQuestTrigger::SQuestDatum*[trigger->ActionCount];
                     if(lma_export)
                     {
-                        Log(MSG_INFO, "\t\t\t Actions (%i)",trigger->ActionCount);
-                        Log(MSG_INFO, "\t\t\t {");
+                        LogSp(MSG_INFO, "\t\t\t Actions (%i)",trigger->ActionCount);
+                        LogSp(MSG_INFO, "\t\t\t {");
                     }
 
                     for(dword k = 0; k < trigger->ActionCount; k++)
@@ -203,6 +216,7 @@ void CWorldServer::ReadQSD(strings path, dword index)
                         data->data = new byte[data->size - 8];
                         fh->Read(data->data, data->size - 8, 1);
                         trigger->Actions[k] = data;
+
 
                         /*
                         if(data->opcode==8)
@@ -216,6 +230,7 @@ void CWorldServer::ReadQSD(strings path, dword index)
                         }
                         */
 
+
                         //LMA: Export
                         if (lma_export)
                         {
@@ -226,7 +241,7 @@ void CWorldServer::ReadQSD(strings path, dword index)
 
                     if(lma_export)
                     {
-                        Log(MSG_INFO, "\t\t\t }");
+                        LogSp(MSG_INFO, "\t\t\t }");
                     }
 
                 }
@@ -240,37 +255,35 @@ void CWorldServer::ReadQSD(strings path, dword index)
                     trigger->Actions = NULL;
                 }
 
-                //printf("%s::%i - TriggerName = %s, TriggerSize = %u)",__FILE__,__LINE__, trigger->TriggerName, TriggerList.size());
-		trigger->TriggerHash = MakeStrHash(trigger->TriggerName);
-                TriggerList.push_back( trigger );
+                trigger->TriggerHash = MakeStrHash(trigger->TriggerName);
+		TriggerList.push_back( trigger );
 
                 if(lma_export)
                 {
-                    Log(MSG_INFO, "\t\t ");
-                    Log(MSG_INFO, "\t\t }");
+                    LogSp(MSG_INFO, "\t\t ");
+                    LogSp(MSG_INFO, "\t\t }");
                 }
-
             }
 
             if(lma_export)
             {
-                Log(MSG_INFO, "\t ");
-                Log(MSG_INFO, "\t }");
+                LogSp(MSG_INFO, "\t ");
+                LogSp(MSG_INFO, "\t }");
             }
 
         }
 
         if(lma_export)
         {
-            Log(MSG_INFO, " ");
-            Log(MSG_INFO, "}");
+            LogSp(MSG_INFO, " ");
+            LogSp(MSG_INFO, "}");
         }
 
     }
     else
     {
          //Log( MSG_ERROR, "QSD File: '%s'", path );
-         Log( MSG_WARNING, "QSD File: '%s', Mass exporter = %s", path, Config.massexport ? "true" : "false" );
+         Log( MSG_WARNING, "QSD File: '%s'", path );
     }
 
     fh->Close();
@@ -284,51 +297,50 @@ void CWorldServer::LoadQuestData()
     CStrStb* stbQuest=NULL;
     if(Config.is_pegasus==1)
     {
-        stbQuest = new CStrStb("3DDataPeg/stb/LIST_QUESTDATA.STB");
+        stbQuest = new CStrStb("3DDATAPeg/stb/LIST_QUESTDATA.STB");
     }
     else
     {
         stbQuest = new CStrStb("3DDATA/STB/LIST_QUESTDATA.STB");
     }
 
-	char buffer [100];
-	char path[100];
 
-	Log( MSG_WARNING, "QSD Files amout = %i", stbQuest->Rows(), Config.massexport ? "true" : "false" );
+	for(dword i = 1; i < stbQuest->Rows(); i++)
+	{
+	    if(stbQuest->Data(i, 0))
+	    {
 
-	for(dword i = 1; i < stbQuest->Rows(); i++){
-		if(stbQuest->Data(i, 0)){
-			strcpy((char*)&buffer, stbQuest->Data(i, 0));
+		char buffer [100];
+        	char path[100];
+        	char temp[] = "3DDATA/";
+	        strcpy((char*)&buffer, stbQuest->Data(i, 0));
 
-			for (int loop = 0; buffer[loop] !=0; loop++)
-			{
-				buffer[loop] = toupper(buffer[loop]);
-				if (buffer[loop] == '\\')
-				{
-					buffer[loop] = '/';
-				}
 
-                //LMA: For Pegasus.
-			    if(Config.is_pegasus==1&&loop<7)
-                    		path[loop]=toupper(buffer[loop]);
-			}
+		for (int loop = 0; buffer[loop] !=0; loop++)
+		{
+		    buffer[loop] = toupper(buffer[loop]);
+		    if (buffer[loop] == '\\')
+		    {
+			buffer[loop] = '/';
+		    }
 
-			//LMA: Patch for Pegasus server data files:
-			if(Config.is_pegasus==1)
-			{
-			    char temp[] = "3DDATA/";
-			    if(strcmp (temp,path)==0)
-			    {
-			        string temps=buffer;
-			        temps="3DDATAPEG/"+temps.substr(7);
-                    		strcpy ((char*)&buffer,temps.c_str());
-                    		buffer[temps.size()]=0;
-			    }
-
-			}
-
-			GServer->ReadQSD((strings)&buffer,i);
+               	    //LMA: For Pegasus.
+		    if(loop<7)
+                	path[loop]=toupper(buffer[loop]);
 		}
+
+		//LMA: Patch for Pegasus server data files:
+	        if(strcmp (temp,path)==0)
+	        {
+	            string temps=buffer;
+	            temps="3DDATA/"+temps.substr(7);
+               	    strcpy ((char*)&buffer,temps.c_str());
+               	    buffer[temps.size()]=0;
+	        }
+
+		//printf("Quests.cpp::332 - %s\n", (char*)&buffer);
+	    	GServer->ReadQSD((char*)&buffer,i);
+	    }
 	}
 
 	Log(MSG_INFO, "Finished loading quest data                              ");
@@ -598,12 +610,12 @@ char* CWorldServer::Operators(byte btOp,char* buffer)
 
 //LMA: We export QSD Conditions here
 //void CWorldServer::ExportQSDData(byte* dataorg,int opcode,int size,CQuestTrigger::SQuestDatum* dataraw)
-void CWorldServer::ExportQSDData(byte* dataorg,int size,int opcode)
+void CWorldServer::ExportQSDData(byte* dataorg, int size,int opcode)
 {
     char buffero[20];
     char buffera[20];
-    UINT itemtype=0;
-    UINT itemnum=0;
+    unsigned int itemtype=0;
+    unsigned int itemnum=0;
 
 
     //check Quest.
@@ -622,7 +634,7 @@ void CWorldServer::ExportQSDData(byte* dataorg,int size,int opcode)
         LogSp(MSG_INFO,"\t\t\t\t\t CDT %.3i: Check %i Player's quest vars",opcode,data->iDataCnt);
         for (int i=0;i<data->iDataCnt;i++)
         {
-            dword address = i * sizeof(STR_QUEST_DATA);
+            unsigned long address = i * sizeof(STR_QUEST_DATA);
             address += (intptr_t)dataorg;
             address += 4;
             STR_QUEST_DATA* curQst = (STR_QUEST_DATA*)address;
@@ -640,7 +652,7 @@ void CWorldServer::ExportQSDData(byte* dataorg,int size,int opcode)
         LogSp(MSG_INFO,"\t\t\t\t\t CDT %.3i: Check %i Player's quest vars",opcode,data->iDataCnt);
         for (int i=0;i<data->iDataCnt;i++)
         {
-            dword address = i * sizeof(STR_QUEST_DATA);
+            unsigned long address = i * sizeof(STR_QUEST_DATA);
             address += (intptr_t)dataorg;
             address += 4;
             STR_QUEST_DATA* curQst = (STR_QUEST_DATA*)address;
@@ -659,7 +671,7 @@ void CWorldServer::ExportQSDData(byte* dataorg,int size,int opcode)
 
         for(int i = 0; i < data->iDataCnt; i++)
         {
-            dword address = i * 0x0C;
+            unsigned long address = i * 0x0C;
             address += (intptr_t)dataorg;
             address += 4;
             STR_ABIL_DATA* curAbil = (STR_ABIL_DATA*)address;
@@ -678,7 +690,7 @@ void CWorldServer::ExportQSDData(byte* dataorg,int size,int opcode)
 
         for(int i = 0; i < data->iDataCnt; i++)
         {
-            dword address = i * 0x10;
+            unsigned long address = i * 0x10;
             address += (intptr_t)dataorg;
             address += 4;
             STR_ITEM_DATA* curItem = (STR_ITEM_DATA*)address;
@@ -1057,8 +1069,8 @@ void CWorldServer::ExportQSDDataA(byte* dataorg,int size,int opcode)
     char buffero[20];
     char buffera[20];
     char buffer[100];
-    UINT itemtype=0;
-    UINT itemnum=0;
+    unsigned int itemtype=0;
+    unsigned int itemnum=0;
 
 
     //Update quest
@@ -1150,8 +1162,8 @@ void CWorldServer::ExportQSDDataA(byte* dataorg,int size,int opcode)
 
         for(dword i = 0; i < data->iDataCnt; i++)
         {
-            dword address = i * sizeof(STR_QUEST_DATA);
-            address += (intptr_t)dataorg;
+            unsigned long address = i * sizeof(STR_QUEST_DATA);
+            address += (uintptr_t)dataorg;
             address += 4;
             STR_QUEST_DATA* curQst = (STR_QUEST_DATA*)address;
             LogSp(MSG_INFO,"\t\t\t\t\t\t |-> Set Quest Var[0x%04x (%u)][%i] %s %i",curQst->m_wVarTYPE,curQst->m_wVarTYPE,curQst->m_wVarNO,Operators(curQst->btOp,buffero),curQst->nValue);
@@ -1170,8 +1182,8 @@ void CWorldServer::ExportQSDDataA(byte* dataorg,int size,int opcode)
 
         for(dword i = 0; i < data->iDataCnt; i++)
         {
-            dword address = i * 0x0C;
-            address += (intptr_t)dataorg;
+            unsigned long address = i * 0x0C;
+            address += (uintptr_t)dataorg;
             address += 4;
             STR_ABIL_DATA* curAbil = (STR_ABIL_DATA*)address;
             LogSp(MSG_INFO,"\t\t\t\t\t\t |-> Set Stat %s  %s %i",Abilities(curAbil->iType,buffera),Operators(curAbil->btOp,buffero),curAbil->iValue);
@@ -1190,8 +1202,8 @@ void CWorldServer::ExportQSDDataA(byte* dataorg,int size,int opcode)
 
         for(dword i = 0; i < data->iDataCnt; i++)
         {
-            dword address = i * sizeof(STR_QUEST_DATA);
-            address += (intptr_t)dataorg;
+            unsigned long address = i * sizeof(STR_QUEST_DATA);
+            address += (uintptr_t)dataorg;
             address += 4;
             STR_QUEST_DATA* curQst = (STR_QUEST_DATA*)address;
             LogSp(MSG_INFO,"\t\t\t\t\t\t |-> Set Quest Var[0x%04x (%u)][%i] %s %i",curQst->m_wVarTYPE,curQst->m_wVarTYPE,curQst->m_wVarNO,Operators(curQst->btOp,buffero),curQst->nValue);
@@ -1512,4 +1524,3 @@ void CWorldServer::ExportQSDDataA(byte* dataorg,int size,int opcode)
 
     return;
 }
-

@@ -843,7 +843,7 @@ AIACT(017)
 		newdrop->item.appraised = 1;
 		newdrop->item.refine = 0;
 	}
-    LogDebug( "AIP DROP item type=  %i item num = %i", newdrop->item.itemtype, newdrop->item.itemnum);
+    Log(MSG_INFO,"AIP DROP item type=  %i item num = %i", newdrop->item.itemtype, newdrop->item.itemnum);
 	newdrop->item.count = 1;
 
 

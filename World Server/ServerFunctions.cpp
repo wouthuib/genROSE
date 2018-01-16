@@ -417,7 +417,7 @@ CDrop* CWorldServer::GetDrop( CMonster* thismon )
 // Build Drop the PY way
 CDrop* CWorldServer::GetPYDrop( CMonster* thismon, UINT droptype )
 {   //if droptype = 1 then it is a normal drop. if it is 2 then it is a potential side drop.
-    //Log(MSG_INFO,"GetPYDrop, monster %i, droptype %i",thismon->montype,droptype);
+    Log(MSG_INFO,"GetPYDrop, monster %i, droptype %i",thismon->montype,droptype);
     long int time = static_cast<long int>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count());
 
     if(droptype == 2) // monster is still alive
@@ -549,7 +549,8 @@ CDrop* CWorldServer::GetPYDrop( CMonster* thismon, UINT droptype )
     }
     else
     {
-        int randv = RandNumber( 1, 100);
+        int randv = rand()%100+1;
+	Log(MSG_WARNING,"GetPYDrop:: randv = %i <= 30, is Zuly drop", randv);
         if(randv <= 30)//30% zuly drop instead of item drop
         {
             newdrop->type = 1; //Drop Zuly
@@ -947,7 +948,8 @@ CDrop* CWorldServer::GetPYDropAnd( CMonster* thismon, UINT droptype )
     }
     else
     {
-        int randv = RandNumber( 1, 100);
+        int randv = rand()%100+1;
+	Log(MSG_WARNING,"GetPYDrop:: randv = %i <= %i, is Zuly drop", randv, GServer->Config.pc_drop_zuly);
         if(randv <= GServer->Config.pc_drop_zuly)//x% zuly drop instead of item drop
         {
             newdrop->type = 1; //Drop Zuly
@@ -986,7 +988,7 @@ CDrop* CWorldServer::GetPYDropAnd( CMonster* thismon, UINT droptype )
                 //testing area.
                 if (isdrop&&thisdrop->a_x!=0)
                 {
-                    if (thismon->Position->current.x<isdrop&&thisdrop->a_x||thismon->Position->current.x>isdrop&&thisdrop->b_x)
+                    if (thismon->Position->current.x < isdrop&&thisdrop->a_x||thismon->Position->current.x>isdrop&&thisdrop->b_x)
                     {
                         isdrop=false;
                     }

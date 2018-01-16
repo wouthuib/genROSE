@@ -220,7 +220,7 @@ void CWorldServer::ServerLoop( )
 	//MySQL Ping (every hour)
 	//20070623, 221000
 	UINT time_last_ping=time;
-	UINT delay_ping=3600;
+	UINT delay_ping=3600000;
 
 	//LMA END
 
@@ -230,10 +230,10 @@ void CWorldServer::ServerLoop( )
         //LMA BEGIN
         //MySQL Ping
         //20070623, 221000
-        UINT etime = (UINT)round(time - time_last_ping) * 1000;
-        if(etime >= delay_ping * 1000)
+        UINT etime = (UINT)round(clock() - time_last_ping);
+        if(etime >= delay_ping)
         {
-            time_last_ping = time;
+            time_last_ping = clock();
             Ping();
         }
         //LMA END

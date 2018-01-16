@@ -441,7 +441,7 @@ void CCharacter::NormalAttack( CCharacter* Enemy )
         {
             long int hitsave=hitpower;
             hitpower += ((hitpower * Stats->ExtraDamage_add) / 100);
-            Log(MSG_INFO,"ExtraDmg Normal atk: before %i, after %i (ED: %i)",hitsave,hitpower,Stats->ExtraDamage_add);
+            //Log(MSG_INFO,"ExtraDmg Normal atk: before %i, after %i (ED: %i)",hitsave,hitpower,Stats->ExtraDamage_add);
         }
     }
 
@@ -473,11 +473,11 @@ void CCharacter::NormalAttack( CCharacter* Enemy )
 
     if (Enemy->IsMonster())
     {
-       Log(MSG_INFO,"Normal Attack, monster HP %lli, hitpower %li",Enemy->Stats->HP, hitpower);
+       //Log(MSG_INFO,"Normal Attack, monster HP %lli, hitpower %li",Enemy->Stats->HP, hitpower);
     }
     else
     {
-       Log(MSG_INFO,"Normal Attack, Player HP %lli, hitpower %li",Enemy->Stats->HP, hitpower);
+       //Log(MSG_INFO,"Normal Attack, Player HP %lli, hitpower %li",Enemy->Stats->HP, hitpower);
     }
 
     // actually the target was hit, if it was sleeping, set duration of
@@ -498,7 +498,7 @@ void CCharacter::NormalAttack( CCharacter* Enemy )
         ADDWORD    ( pak, Enemy->clientid );
         ADDDWORD   ( pak, 1);
         GServer->SendToVisible( &pak, Enemy );
-        Log(MSG_INFO,"death atk for %i, amount: %i",Enemy->clientid,hitpower);
+        //Log(MSG_INFO,"death atk for %i, amount: %i",Enemy->clientid,hitpower);
     }
 
     BEGINPACKET( pak, 0x799 );
@@ -516,7 +516,7 @@ void CCharacter::NormalAttack( CCharacter* Enemy )
         //if (!is_already_dead&&(GServer->MapList.Index[Position->Map]->QSDkilling>0||GServer->MapList.Index[Position->Map]->QSDDeath>0)&&IsPlayer()&&Enemy->IsPlayer())
         if (!is_already_dead&&((GServer->MapList.Index[Position->Map]->QSDkilling>0&&IsPlayer()&&Enemy->IsPlayer())||(GServer->MapList.Index[Position->Map]->QSDDeath&&Enemy->IsPlayer())))
         {
-            Log(MSG_INFO,"UWKILL begin normal atk");
+            //Log(MSG_INFO,"UWKILL begin normal atk");
             UWKill(Enemy);
         }
 
@@ -538,15 +538,15 @@ void CCharacter::NormalAttack( CCharacter* Enemy )
         {
             CPlayer* plkilled=(CPlayer*) Enemy;
             CPlayer* plkiller=(CPlayer*) this;
-            Log(MSG_INFO,"NA CID %i (%s) killed %i (%s) (NORMAL_ATTACK).",clientid,plkiller->CharInfo->charname,Enemy->clientid,plkilled->CharInfo->charname);
+            //Log(MSG_INFO,"NA CID %i (%s) killed %i (%s) (NORMAL_ATTACK).",clientid,plkiller->CharInfo->charname,Enemy->clientid,plkilled->CharInfo->charname);
         }
         else
         {
-            Log(MSG_INFO,"NA CID %i killed %i (NORMAL_ATTACK).",clientid,Enemy->clientid);
+            //Log(MSG_INFO,"NA CID %i killed %i (NORMAL_ATTACK).",clientid,Enemy->clientid);
         }
 
         CDrop* thisdrop = NULL;
-        // Log(MSG_WARNING,"Dead, critical %i",critical);
+        Log(MSG_WARNING,"Dead, critical %i",critical);
 
         //LMA: Seems that 24 is for critical and skill? We disable critical final hit for now.
         //ADDDWORD   ( pak, critical?28:16 );
@@ -559,13 +559,13 @@ void CCharacter::NormalAttack( CCharacter* Enemy )
             {
                 CPlayer* plkiller=(CPlayer*) this;
                 nb_drops=plkiller->bonusddrop;
-                Log(MSG_INFO,"Drop time, there should be %i drops",nb_drops);
+                //Log(MSG_INFO,"Drop time, there should be %i drops",nb_drops);
             }
 
             //No drop if already dead and drop done.
             if(Enemy->drop_dead)
             {
-               // Log(MSG_WARNING,"Trying to make a monster (CID %u, type %u) drop again but already did.",Enemy->clientid,Enemy->char_montype);
+                Log(MSG_WARNING,"Trying to make a monster (CID %u, type %u) drop again but already did.",Enemy->clientid,Enemy->char_montype);
                 nb_drops=0;
             }
 
@@ -574,7 +574,7 @@ void CCharacter::NormalAttack( CCharacter* Enemy )
                 thisdrop = Enemy->GetDrop( );
                 if(thisdrop!=NULL)
                 {
-                    Log(MSG_INFO,"Dropping Nb %i",k);
+                    //Log(MSG_INFO,"Dropping Nb %i",k);
                     CMap* map = GServer->MapList.Index[thisdrop->posMap];
                     map->AddDrop( thisdrop );
                 }
@@ -608,7 +608,7 @@ void CCharacter::NormalAttack( CCharacter* Enemy )
                 ADDWORD    ( pak, 1 );
                 ADDWORD    ( pak, 0 );
                 plkilled->client->SendPacket(&pak);
-                //Log(MSG_WARNING,"NA Packet 820 sent to %s",plkilled->CharInfo->charname);
+                Log(MSG_WARNING,"NA Packet 820 sent to %s",plkilled->CharInfo->charname);
             }
 
         }
@@ -651,7 +651,7 @@ void CCharacter::NormalAttack( CCharacter* Enemy )
 
         if(plkiller->items[136].itemnum==0||plkiller->items[139].itemnum==0)
         {
-           // Log(MSG_WARNING,"%s should be riding but doesn't have a motor %i or weapon %i (normal_attack)?",plkiller->CharInfo->charname,plkiller->items[136].itemnum,plkiller->items[139].itemnum);
+            Log(MSG_WARNING,"%s should be riding but doesn't have a motor %i or weapon %i (normal_attack)?",plkiller->CharInfo->charname,plkiller->items[136].itemnum,plkiller->items[139].itemnum);
             return;
         }
 
@@ -710,7 +710,7 @@ bool CCharacter::ResumeNormalAttack( CCharacter* Enemy,bool was_aoe)
         //On some AOE we don't have a skilltarget ?
         if (Enemy==NULL&&was_aoe)
         {
-            Log(MSG_INFO,"After AOE without specific target.");
+            //Log(MSG_INFO,"After AOE without specific target.");
         }
 
         //he was already fighting the monster in normal_attack mode and did a skill, now he has to resume normal_attack.
@@ -728,7 +728,7 @@ bool CCharacter::ResumeNormalAttack( CCharacter* Enemy,bool was_aoe)
 
             if (NAEnemy==NULL)
             {
-                Log(MSG_INFO,"after skill, can't find previous target %u, stopping.",Battle->target);
+                //Log(MSG_INFO,"after skill, can't find previous target %u, stopping.",Battle->target);
                 ClearBattle(Battle);
                 return true;
             }
@@ -736,12 +736,12 @@ bool CCharacter::ResumeNormalAttack( CCharacter* Enemy,bool was_aoe)
             //Is the foe dead?
             if(NAEnemy->IsDead())
             {
-                Log(MSG_INFO,"after skill, player is stopping battle with %u because he's dead",Battle->target);
+                //Log(MSG_INFO,"after skill, player is stopping battle with %u because he's dead",Battle->target);
                 ClearBattle(Battle);
                 return true;
             }
 
-            Log(MSG_INFO,"after skill, player is resuming normal_attack with %u (%u)",Battle->target,NAEnemy->clientid);
+            //Log(MSG_INFO,"after skill, player is resuming normal_attack with %u (%u)",Battle->target,NAEnemy->clientid);
             Battle->atktype = NORMAL_ATTACK;
             Battle->skilltarget = 0;
             Battle->atktarget = Battle->target;

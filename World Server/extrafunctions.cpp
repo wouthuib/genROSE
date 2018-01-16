@@ -643,7 +643,7 @@ void CWorldServer::ClearClientID( unsigned int id )
     }
 
     #ifdef STATICID
-    Log(MSG_INFO,"In clear CID %i",id);
+    //Log(MSG_INFO,"In clear CID %i",id);
     //LMA: if the thread is already blocked, it should return EBUSY
     //else 0
     UINT res_blockP=pthread_mutex_trylock(&GServer->PlayerMutex);
@@ -672,7 +672,7 @@ void CWorldServer::ClearClientID( unsigned int id )
         pthread_mutex_unlock( &GServer->MapMutex );
     }
 
-    Log(MSG_INFO,"Out clear CID %i",id);
+    //Log(MSG_INFO,"Out clear CID %i",id);
     #endif
 
 
@@ -683,14 +683,19 @@ void CWorldServer::ClearClientID( unsigned int id )
 CDrop* CWorldServer::GetDropByID( UINT id, UINT map )
 {
     if(map!=0)
-        return MapList.Index[map]->GetDropInMap( id );
-	for(unsigned j=0; j<MapList.Map.size(); j++)
     {
-		CDrop* thisdrop = MapList.Map.at(j)->GetDropInMap( id );
-		if(thisdrop!=NULL)
-		  return thisdrop;
-	}
-	return NULL;
+        return MapList.Index[map]->GetDropInMap( id );
+    }
+
+    for(unsigned j=0; j<MapList.Map.size(); j++)
+    {
+	CDrop* thisdrop = MapList.Map.at(j)->GetDropInMap( id );
+	if(thisdrop!=NULL)
+	  return thisdrop;
+    }
+
+    Log(MSG_INFO,"GetDropByID return NULL");
+    return NULL;
 }
 
 // Search a Chest by ChestID
@@ -2101,7 +2106,9 @@ UINT CWorldServer::RandNumber( UINT init, UINT range, UINT seed )
     }
     else
     {
-        UINT ranum = init+int(range*rand()/(RAND_MAX + 1.0));
+        //UINT ranum = init + int(range*rand()/(RAND_MAX + 1.0));
+	UINT ranum = init + (int)(rand() % (range + 1));
+	//Log(MSG_INFO,"RandNumber: init = %u, range =%u, return value = %u ", init, range, ranum);
         return ranum;
     }
 
